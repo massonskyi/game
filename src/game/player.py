@@ -16,7 +16,7 @@ class Player:
         self.movement_speed = 0.1
         self.size = (0.6, 1.8, 0.6)
         self.jumping = False
-        self.on_ground = False
+        self._on_ground = False
         self.velocity = (0, 0, 0)
         self.camera_distance = 5
         self.camera_pitch = 0
@@ -25,16 +25,16 @@ class Player:
         self.speed = 0.1
 
     def update(self, delta_time, world):
-        if self.jumping and self.on_ground:
+        if self.jumping and self._on_ground:
             self.jumping = False
-            self.on_ground = False
+            self._on_ground = False
             self.velocity = (self.velocity[0], 0.3, self.velocity[2])
 
         # Update position based on direction and speed
         new_position = (
-            self.position[0] + self.direction.get_player_direction().get_direction() * self.speed * delta_time,
-            self.position[1] + self.direction.get_player_direction().get_direction() * self.speed * delta_time,
-            self.position[2] + self.direction.get_player_direction().get_direction() * self.speed * delta_time
+            self.position[0] + self.direction.get_player_direction().get_direction()[0] * self.speed * delta_time,
+            self.position[1] + self.direction.get_player_direction().get_direction()[1] * self.speed * delta_time,
+            self.position[2] + self.direction.get_player_direction().get_direction()[2] * self.speed * delta_time
         )
 
         is_blocked = False
@@ -78,11 +78,13 @@ class Player:
     def set_jumping(self, jumping):
         self.jumping = jumping
 
+    @property
     def on_ground(self):
-        return self.on_ground
+        return self._on_ground
 
-    def set_on_ground(self, on_ground):
-        self.on_ground = on_ground
+    @on_ground.setter
+    def on_ground(self, on_ground):
+        self._on_ground = on_ground
 
     def get_position(self):
         return self.position
@@ -160,3 +162,19 @@ class Player:
                 # Add the new block to the chunk
                 chunk.set_block(chunk_x, chunk_y, chunk_z, Block((chunk_x, chunk_y, chunk_z), block_type))
 
+    def render(self):
+        glPushMatrix()  # Save the current matrix state
+
+        # Apply the model matrix for the player's position and orientation
+        glTranslatef(self.position[0], self.position[1], self.position[2])
+
+        # Placeholder: Replace the following lines with your actual rendering code
+        glBegin(GL_QUADS)
+        glColor3f(1.0, 0.0, 0.0)  # Red color for demonstration
+        glVertex3f(-0.5, -0.5, -0.5)
+        glVertex3f(0.5, -0.5, -0.5)
+        glVertex3f(0.5, 0.5, -0.5)
+        glVertex3f(-0.5, 0.5, -0.5)
+        glEnd()
+
+        glPopMatrix()  # Restore the previous matrix state

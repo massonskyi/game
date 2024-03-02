@@ -1,5 +1,5 @@
 from src.game.chunk import Chunk
-from src.rendering.block_rengerer import BlockRenderer
+from src.rendering.block_renderer import BlockRenderer
 
 
 class World:
@@ -32,9 +32,9 @@ class World:
         else:
             raise TypeError("Player direction must be a Direction object")
 
-    def render(self):
+    def render(self, block_renderer):
         for chunk in self.chunks:
-            chunk.render(self.block_renderer)
+            chunk.render(block_renderer)
 
     def set_directional_light(self, light_direction, light_color):
         """

@@ -4,7 +4,7 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import glClear, GL_COLOR_BUFFER_BIT, GL_DEPTH_
 from src.game.world import World
 from src.game.player import Player
 from src.physics.physics import Physics
-from src.rendering.block_rengerer import BlockRenderer
+from src.rendering.block_renderer import BlockRenderer
 
 
 class Game:
@@ -67,7 +67,7 @@ class Game:
         """
 
         self.world.update(delta_time)
-        self.player.update(delta_time, self.world.directional_light)
+        self.player.update(delta_time, self.world)
         self.physics.update(self.world, self.player)
 
     def render(self):

@@ -93,7 +93,13 @@ class BlockRenderer:
         glEnableVertexAttribArray(1)
 
     def render_block(self, block: Block, model_matrix: np.array):
+        ...
+        """
         self.shader.use()
+
+        # Ensure the model matrix is a 4x4 matrix
+        if model_matrix.shape != (4, 4):
+            raise ValueError("Invalid model matrix shape. Expected a 4x4 matrix.")
         self.shader.set_uniform("model", model_matrix)
         self.shader.set_uniform("texture_sampler", 0)
 
@@ -105,3 +111,4 @@ class BlockRenderer:
         glBindVertexArray(self.vao)
         glDrawArrays(GL_TRIANGLES, 0, 36)
         glBindVertexArray(0)
+        """

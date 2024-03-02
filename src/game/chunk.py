@@ -1,4 +1,7 @@
 import numpy as np
+from OpenGL.GL import glGetFloatv
+from OpenGL.raw.GL.VERSION.GL_1_0 import GL_MODELVIEW_MATRIX, glLoadMatrixf, glPushMatrix, glPopMatrix
+
 from src.game.block import Block
 from src.rendering.shader import Shader
 
@@ -96,8 +99,31 @@ class Chunk:
         """
 
         for block in self.blocks:
-            model_matrix = np.translate(np.eye(4), block.get_position())
+            # Get the current modelview matrix
+            model_matrix = glGetFloatv(GL_MODELVIEW_MATRIX)
+
+            # Create a translation matrix using the block's position
+            translation_matrix = np.array([
+                [1, 0, 0, block.get_position()[0]],
+                [0, 1, 0, block.get_position()[1]],
+                [0, 0, 1, block.get_position()[2]],
+                [0, 0, 0, 1]
+            ])
+
+            # Multiply the current modelview matrix by the translation matrix
+            model_matrix = np.matmul(model_matrix, translation_matrix)
+
+            # Convert the model matrix to GLfloat before loading
+            model_matrix = model_matrix.astype(np.float32)
+
+            # Load the new model matrix
+            glLoadMatrixf(model_matrix)
+            glPushMatrix()  # Push the matrix to avoid side effects
+
+            # Render the block
             block_renderer.render_block(block, model_matrix)
+
+            glPopMatrix()  # Pop the matrix after rendering
 
     def get_block(self, x, y, z):
         """

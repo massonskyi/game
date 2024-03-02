@@ -9,7 +9,7 @@ class Physics:
 
     def update(self, world, player):
         # Update physics for the world and player (gravity, collisions, etc.)
-        player.set_velocity(player.get_velocity()[0], player.get_velocity()[1] + self.gravity, player.get_velocity()[2])
+        player.set_velocity([player.get_velocity()[0], player.get_velocity()[1] + self.gravity, player.get_velocity()[2]])
 
         # Check and handle collisions in X and Z axes
         new_position = self.check_and_handle_collisions(player, world, player.get_position()[0] + player.get_velocity()[0], player.get_position()[1], player.get_position()[2] + player.get_velocity()[2])
@@ -21,7 +21,7 @@ class Physics:
 
     def check_and_handle_collisions(self, player, world, x, y, z):
         player_position = (x, y, z)
-        collided_block = self.collision.check_collision_with_blocks(player, world, ignore_y=True)
+        collided_block = self.collision.check_collision_with_blocks(player, world)
 
         if collided_block is not None:
             if player.get_velocity()[0] > 0:
@@ -33,7 +33,7 @@ class Physics:
             elif player.get_velocity()[2] < 0:
                 player_position = (player_position[0], player_position[1], collided_block.position[2] + 1)
 
-        if player.on_ground() and player.is_jumping():
+        if player.on_ground and player.is_jumping():
             player.set_velocity(player.get_velocity()[0], self.jump_force, player.get_velocity()[2])
 
         return player_position
